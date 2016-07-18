@@ -65,7 +65,7 @@ const routes = {
             if (component.type.requiresSession === true && userDetails.errors) {
                 navigate('login')
                 return;
-            } else if(component.type.requiresSession !== true && userDetails.name){
+            } else if(component.type.requiresSession === false && userDetails.name){
                 navigate('table')
                 return;
             }else {

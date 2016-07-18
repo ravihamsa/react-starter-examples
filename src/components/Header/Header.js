@@ -16,6 +16,7 @@ class Header extends SmartWrapper {
 
     render (){
         if(this.dataIndex.logoutResponse){
+            delete this.dataIndex.logoutResponse;
             sessionManager.clearUserDetails();
             navigate('login');
         }

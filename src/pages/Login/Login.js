@@ -23,6 +23,7 @@ class Login extends SmartWrapper {
             } else if (this.dataIndex.errors && this.props.showError !== false) {
                 return <MessageStack messages={this.dataIndex.errors}/>
             } else if(this.dataIndex.loginResponse) {
+                delete this.dataIndex.loginResponse;
                 dataLoader.addResource('userDetails', {
                     type: 'static',
                     data: {
@@ -34,7 +35,7 @@ class Login extends SmartWrapper {
                 })
                 dataLoader.setSessionHeaders(this.dataIndex.loginResponse);
                 sessionManager.clearUserDetails();
-                navigate('playerList');
+                navigate('table');
                 return null;
             }else{
                 return <div>
