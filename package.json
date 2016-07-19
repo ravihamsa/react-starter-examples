@@ -46,12 +46,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shettyrishit/spoblo-web.git"
+    "url": "git+https://github.com/ravihamsa/react-starter-examples.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shettyrishit/spoblo-web/issues"
+    "url": "https://github.com/ravihamsa/react-starter-examples/issues"
   },
-  "homepage": "https://github.com/shettyrishit/spoblo-web#readme"
+  "homepage": "https://github.com/ravihamsa/react-starter-examples#readme"
 }
