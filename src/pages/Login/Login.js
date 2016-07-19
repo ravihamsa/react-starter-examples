@@ -4,12 +4,17 @@
 import React, {Component, PropTypes} from "react";
 import {core, components} from 'react-starter';
 import sessionManager from '../../others/sessionManager';
-const {navigate, dataLoader, SmartWrapper, Loader, MessageStack} = core;
+import navigate from 'react-starter/lib/core/navigate';
+const {dataLoader, SmartWrapper, Loader, MessageStack} = core;
 
 const {Form, TextInput, Select} = components.Form;
 
 const {ViewStateManager, ViewState} = components.common;
 
+
+const selectOptionsConfig = {
+    dataRequests:[{propKey:'options', requestId:'selectOptions'}]
+}
 
 class Login extends SmartWrapper {
 
@@ -56,6 +61,9 @@ class Login extends SmartWrapper {
                             <h1>Login</h1>
                             <TextInput name="username" placehodler="User Name" label="User Name"/>
                             <TextInput name="password" type="password" placeholder="Password" label="Password"/>
+                            <SmartWrapper {...selectOptionsConfig}>
+                                <Select name="role" label="Role"/>
+                            </SmartWrapper>
                             <button className="btn btn-default">Login</button>
                         </div>
                     </div>
@@ -71,31 +79,7 @@ class Login extends SmartWrapper {
 
         </ViewStateManager>
 
-        if (this.state.active) {
-            if (this.state.loading) {
-                return <Loader/>
-            } else if (this.dataIndex.errors && this.props.showError !== false) {
-                return <MessageStack messages={this.dataIndex.errors}/>
-            } else if (this.dataIndex.loginResponse) {
 
-            } else {
-                return <div>
-                    <Form onSubmitHandler={this.onSubmitHandler.bind(this)}>
-                        <div className="row">
-                            <div className="col-md-4">
-                                <h1>Login</h1>
-                                <TextInput name="username" placehodler="User Name" label="User Name"/>
-                                <TextInput name="password" type="password" placeholder="Password" label="Password"/>
-                                <button className="btn btn-default">Login</button>
-                            </div>
-                        </div>
-                    </Form>
-
-                </div>
-            }
-        } else {
-            return <div>asdfa</div>;
-        }
     }
 }
 

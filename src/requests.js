@@ -2,7 +2,7 @@
  * Created by ravi.hamsa on 7/16/16.
  */
 
-let urlPrefix = 'api/spoblo/service/'
+let urlPrefix = ''
 
 export default {
     login: {
@@ -11,6 +11,13 @@ export default {
         cache:'none',
         url: urlPrefix + 'login',
         data:{authKey:'123123123123123'}
+    },
+
+    selectOptions:{
+        type: 'url',
+        method: 'get',
+        cache:'none',
+        url:urlPrefix+'/array'
     },
 
     logout: {

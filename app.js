@@ -12,6 +12,10 @@ var proxy = require('express-http-proxy');
 
 app.use(express.static('public'));
 
+app.get('/array', function(req, resp){
+    resp.status(200).send([{id:1, name:'one'}, {id:2, name:'two'}])
+})
+
 // app.use('/api', proxy('ec2-54-169-221-202.ap-southeast-1.compute.amazonaws.com:10000'));
 
 app.listen(4000, function () {

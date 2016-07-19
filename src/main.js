@@ -10,9 +10,14 @@ import pages from './pages';
 import components from './components';
 import requestConfigs from './requests';
 import sessionManager from './others/sessionManager';
+import navigate from 'react-starter/lib/core/navigate';
+import history from 'react-starter/lib/core/history';
+
 const {Login, Register, Table} = pages;
 const {App, Header, Footer} = components;
-const {history, dataLoader, navigate} = core;
+const {dataLoader} = core;
+
+
 
 dataLoader.setCommonHeaders({
     'Content-Type': 'application/json'
