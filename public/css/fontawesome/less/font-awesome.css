@@ -6,8 +6,8 @@
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.eot?v=4.6.3');
-  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.6.3') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
+  src: url('../../../fonts/fontawesome-webfont.eot?v=4.6.3');
+  src: url('../../../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('../../../fonts/fontawesome-webfont.woff2?v=4.6.3') format('woff2'), url('../../../fonts/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('../../../fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('../../../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -2196,92 +2196,4 @@
   margin: 0;
   overflow: visible;
   clip: auto;
-}
-body {
-  font-size: 13px;
-}
-body .page-title {
-  font-size: 16px;
-  padding: 10px 15px;
-  border-width: 1px 0;
-  border-style: solid;
-  font-weight: 700;
-}
-body .bread-crumb {
-  padding: 10px 15px;
-}
-.row.gutter-sm {
-  margin-right: -5px;
-  margin-left: -5px;
-}
-.row.gutter-sm > [class^="col-"],
-.row.gutter-sm > [class*="col-"] {
-  padding-right: 5px;
-  padding-left: 5px;
-}
-.t-right {
-  text-align: right;
-}
-.advertiser-create .container {
-  margin-left: 0;
-}
-html,
-body,
-#app,
-#app > div {
-  height: 100%;
-}
-.page-wrap {
-  min-height: 100%;
-  margin-bottom: -35px;
-}
-.page-wrap:after {
-  content: "";
-  display: block;
-}
-footer,
-.page-wrap:after {
-  height: 35px;
-}
-header {
-  padding: 10px 0;
-}
-footer {
-  padding: 10px 0;
-}
-.form-control {
-  border-radius: 0;
-  font-size: 13px;
-  height: 34px;
-}
-.form-horizontal .form-group {
-  margin-left: 0;
-  margin-right: 0;
-}
-.form-horizontal .form-group label {
-  width: 20%;
-  display: inline-block;
-  font-weight: normal;
-}
-.form-horizontal .form-group .form-control {
-  width: 80%;
-  display: inline-block;
-}
-.form-title {
-  margin-bottom: 30px;
-}
-.form-sub-title {
-  margin-bottom: 20px;
-}
-.element-row {
-  margin-bottom: 15px;
-}
-.element-row:last-child {
-  margin-bottom: 0;
-}
-.element-group {
-  padding: 15px 10px;
-}
-.btn {
-  border-radius: 0;
 }

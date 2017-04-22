@@ -2,47 +2,30 @@
  * Created by ravi.hamsa on 7/16/16.
  */
 
-let urlPrefix = ''
+import _ from 'lodash';
+let urlPrefix = 'backend/api/v1/'
+
 
 export default {
-    login: {
-        type: 'static',
-        method: 'post',
-        cache:'none',
-        url: urlPrefix + 'login',
-        data:{authKey:'123123123123123'}
-    },
-
-    selectOptions:{
+    getListOfSomeItems: {
         type: 'url',
         method: 'get',
         cache:'none',
-        url:urlPrefix+'/array'
+        url: urlPrefix + 'dummyData',
+        parser: function(data){
+            return data;
+        }
     },
 
-    logout: {
-        type: 'static',
-        method: 'put',
+    createAdvertiser:{
+        type:'url',
+        method:'post',
         cache:'none',
-        url: urlPrefix + 'logout',
-        data:{message:'logout successful'}
-    },
-
-    register:{
-        type: 'url',
-        method:'get',
-        cache:'none',
-        url: urlPrefix + 'register',
-        data:{message:'registered successfully'}
-    },
-
-    userDetails: {
-        type: 'static',
-        cache:'none',
-        data: {
-            errors:['not logged in']
-        },
-        responseDelay: 100
+        url:urlPrefix + 'account/adv/create',
+        parser: function(data){
+            debugger;
+            return data;
+        }
     }
 }
 

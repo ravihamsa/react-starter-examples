@@ -1,8 +1,4 @@
-/**
- * Created by ravi.hamsa on 6/29/16.
- */
-
-import Login from './Login'
-import Register from './Register'
-import Table from './Table'
-export default {Login, Register, Table}
+/* ***** generated file - do not edit ***** */ 
+export Home from "./Home"
+export Unknown from "./Unknown"
+export UserLogin from "./user/Login"

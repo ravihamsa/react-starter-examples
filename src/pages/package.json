@@ -1,6 +1,1 @@
-{
-  "name": "pages",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./index.js"
-}
+{"name":"Pages","version":"0.0.0","private":true,"main":"./index.js"}
