@@ -16,6 +16,24 @@ export default {
             return data;
         }
     },
+    uploadRequest: {
+        type: 'url',
+        method: 'upload',
+        cache:'none',
+        url: urlPrefix + 'upload',
+        parser: function(data){
+            return data;
+        }
+    },
+    uploadRequestError: {
+        type: 'url',
+        method: 'upload',
+        cache:'none',
+        url: urlPrefix + 'uploadError',
+        parser: function(data){
+            return data;
+        }
+    },
 
     createAdvertiser:{
         type:'url',

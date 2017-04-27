@@ -111,6 +111,14 @@ app.get('/backend/api/v1/dummydata',function(req, resp){
   resp.send(JSON.stringify(dummyData))
 })
 
+app.post('/backend/api/v1/upload',function(req, resp){
+    resp.send(JSON.stringify(dummyData))
+})
+
+app.post('/backend/api/v1/uploadError',function(req, resp){
+    resp.status(500).send({ error: 'Something failed!' })
+})
+
 app.listen(8090, function () {
   console.log('React app listening on port 8090!');
 });
