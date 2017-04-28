@@ -2,7 +2,11 @@
  * Created by ravi.hamsa on 10/8/16.
  */
 import React, {Component, PropTypes} from "react";
-import {SmartWrapper, RXForm, RXTextInput} from 'react-starter-components';
+import {SmartWrapper, RXForm, RXTextInput, RXDropdown, Form, TextInput, Dropdown, DatePicker} from 'react-starter-components';
+
+
+let options = [{id:'1', name:'one'}, {id:'2', name:'two'}]
+
 
 export default class Forms extends SmartWrapper {
 
@@ -25,6 +29,7 @@ export default class Forms extends SmartWrapper {
 
     render() {
         return <div className="forms">
+            <h1>RXForm PropRules</h1>
             <RXForm onValueChange={this.valueChange.bind(this)} onPropChange={this.propChange.bind(this)}>
                 <RXTextInput name="uname"/>
                 <RXTextInput name="password"  propRules={[{
@@ -37,7 +42,21 @@ export default class Forms extends SmartWrapper {
                         return val.value === 'ravikumar'
                     }, value: 'ravi'
                 }]}/>
+
+                <RXDropdown options={options} name="dp" disabled={true}/>
+                <RXDropdown options={options} name="dp2" />
+
+
             </RXForm>
+
+            <h1>Form Disabled</h1>
+            <Form>
+                <Dropdown options={options} name="dp" disabled={true}/>
+                <DatePicker name="dpicker" disabled={true}/>
+
+                <Dropdown options={options} name="dp"/>
+                <DatePicker name="dpicker"/>
+            </Form>
 
         </div>
     }

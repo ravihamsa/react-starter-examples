@@ -5796,6 +5796,17 @@ var getRuleValue = function getRuleValue(item) {
     };
 };
 
+var getPropRule = function getPropRule(item) {
+    return {
+        type: item.expr,
+        element: item.element,
+        prop: item.prop,
+        value: item.value,
+        valueFunc: item.valueFunc || _lodash2.default.identity,
+        func: item.expr === 'function' ? item.func : activeRulesMap[item.expr]
+    };
+};
+
 var FormElement = function (_Component) {
     _inherits(FormElement, _Component);
 
@@ -5804,8 +5815,11 @@ var FormElement = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (FormElement.__proto__ || Object.getPrototypeOf(FormElement)).apply(this, arguments));
 
-        var _this$props$validatio = _this.props.validations,
-            validations = _this$props$validatio === undefined ? [] : _this$props$validatio;
+        var _this$props = _this.props,
+            _this$props$validatio = _this$props.validations,
+            validations = _this$props$validatio === undefined ? [] : _this$props$validatio,
+            _this$props$propRules = _this$props.propRules,
+            propRules = _this$props$propRules === undefined ? [] : _this$props$propRules;
 
         _this.change$ = new _rxjs2.default.Subject();
         _this._changing = false;
@@ -5821,6 +5835,10 @@ var FormElement = function (_Component) {
         _this.siblingValidations = _lodash2.default.filter(validations, function (item) {
             return item.element !== undefined;
         }).map(function (rule, index) {
+            return getRuleValue(rule);
+        });
+
+        _this.propRules = propRules.map(function (rule, index) {
             return getRuleValue(rule);
         });
         return _this;
@@ -5861,6 +5879,7 @@ var FormElement = function (_Component) {
             var self = this;
             this.validationSubscription = this.context.valueStore.on('change', function (changed, fullObject) {
                 self.validateSiblingsOnChange(changed);
+                self.handlePropRules(changed, fullObject);
             });
         }
     }, {
@@ -5930,14 +5949,30 @@ var FormElement = function (_Component) {
             }
         }
     }, {
+        key: 'handlePropRules',
+        value: function handlePropRules(changed, fullObjecdt) {
+            var _this4 = this;
+
+            var toValidateIds = this.propRules.map(function (item) {
+                return item.element;
+            });
+            var changedKey = _lodash2.default.keys(changed)[0];
+            if (toValidateIds.indexOf(changedKey) > -1) {
+                var propValue = _lodash2.default.reduce(this.propRules, function (memo, rule) {
+                    return !memo && rule.func.call(_this4, { value: fullObjecdt[rule.element] }, rule) === true;
+                }, false);
+                console.log(propValue);
+            }
+        }
+    }, {
         key: 'validateSiblings',
         value: function validateSiblings() {
-            var _this4 = this;
+            var _this5 = this;
 
             var changedKey = this.props.name;
             var valueStore = this.context.valueStore;
             var errors = this.siblingValidations.filter(function (item) {
-                return item.func.call(_this4, item, valueStore.get(item.element)) === false;
+                return item.func.call(_this5, item, valueStore.get(item.element)) === false;
             });
             this.context.errorStore.set(_defineProperty({}, changedKey, errors));
             this.setState({ errors: errors });
@@ -5945,11 +5980,11 @@ var FormElement = function (_Component) {
     }, {
         key: 'validateValue',
         value: function validateValue(value) {
-            var _this5 = this;
+            var _this6 = this;
 
             var name = this.props.name;
             var errors = this.validations.filter(function (item) {
-                return item.func.call(_this5, item, value) === false;
+                return item.func.call(_this6, item, value) === false;
             });
             this.context.errorStore.set(_defineProperty({}, name, errors));
             this.setState({ errors: errors });
@@ -6006,6 +6041,9 @@ var FormElement = function (_Component) {
             var errors = this.getErrors();
             if (errors.length > 0) {
                 classArray.push('has-error');
+            }
+            if (this.props.disabled) {
+                classArray.push('disabled');
             }
             return classArray.join(' ');
         }
@@ -23998,6 +24036,9 @@ var RXFormElement = function (_Component) {
             if (this.state.errors) {
                 classArray.push('has-error');
             }
+            if (this.props.disabled) {
+                classArray.push('disabled');
+            }
             return classArray;
         }
     }, {
@@ -27424,7 +27465,9 @@ var InlinePopup = function (_Component) {
     }, {
         key: 'togglePopup',
         value: function togglePopup() {
-            this.state.open ? this.closePopup() : this.openPopup();
+            if (!this.props.disabled) {
+                this.state.open ? this.closePopup() : this.openPopup();
+            }
         }
     }, {
         key: 'itemClick',
@@ -27586,6 +27629,10 @@ var InlineBody = function (_Component3) {
 InlineBody.defaultProps = {
     valign: 'bottom',
     halign: 'left'
+};
+
+InlinePopup.defaultProps = {
+    disabled: false
 };
 
 exports.default = {
@@ -30171,7 +30218,13 @@ var DataLoader = function () {
                     }
                     return response;
                 }).then(function (response) {
-                    return response.json();
+                    var json = { data: {} }; //gracefully handling exception when response is empty, and sending empty object
+                    try {
+                        json = response.json();
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                    return json;
                 }).then(function (body) {
                     var parsedResponse = self._responseParser(body);
                     parsedResponse = self._executeAfterMiddleWares(requestId, parsedResponse);
@@ -85690,7 +85743,7 @@ var DatePicker = function (_FormElement) {
             var formClasses = this.getFormClasses();
             var errors = this.getErrors();
 
-            return _react2.default.createElement('fieldset', { className: formClasses }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, _react2.default.createElement(InlinePopup, null, _react2.default.createElement(InlineButton, null, _react2.default.createElement('div', null, _react2.default.createElement('input', { type: this.props.type, className: 'form-control', name: this.props.name,
+            return _react2.default.createElement('fieldset', { className: formClasses }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, _react2.default.createElement(InlinePopup, { disabled: this.props.disabled }, _react2.default.createElement(InlineButton, null, _react2.default.createElement('div', null, _react2.default.createElement('input', { type: this.props.type, className: 'form-control', name: this.props.name,
                 placeholder: this.props.placeholder, onChange: this.onChange.bind(this), value: displayValue,
                 readOnly: 'true', ref: 'inputField' }), _react2.default.createElement('span', { className: 'calendar icon' }))), _react2.default.createElement(InlineBody, null, _react2.default.createElement(_Month2.default, { onDateSelect: this.onDateSelect.bind(this), selectedDate: defaultValue, displayDate: defaultValue }))), this.props.helperText ? _react2.default.createElement('small', { className: 'text-muted' }, this.props.helperText) : '', errors.length > 0 ? _react2.default.createElement('small', { className: 'text-danger' }, errors[0].message) : '');
         }
@@ -86135,7 +86188,7 @@ var Dropdown = function (_SelectionFormElement) {
                 filteredOptions = [];
             }
 
-            return _react2.default.createElement('fieldset', { className: formClasses }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, _react2.default.createElement('div', { className: 'form-control drop-down' }, _react2.default.createElement(InlinePopup, { ref: 'inlinePopup' }, _react2.default.createElement(InlineButton, null, this.renderButton()), _react2.default.createElement(InlineBody, null, _react2.default.createElement('div', { className: 'drop-down-body' }, this.props.showSearch ? _react2.default.createElement('input', { type: 'text', autoFocus: true, defaultValue: this.state.query, ref: 'searchBox', onChange: this.onKeyPressHandler, className: 'drop-down-input', placeholder: placeholder }) : null, _react2.default.createElement('div', { onClick: this.clickHandler.bind(this) }, _react2.default.createElement(_List2.default, { ListItem: ListItem,
+            return _react2.default.createElement('fieldset', { className: formClasses }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, _react2.default.createElement('div', { className: 'form-control drop-down' }, _react2.default.createElement(InlinePopup, { ref: 'inlinePopup', disabled: this.props.disabled }, _react2.default.createElement(InlineButton, null, this.renderButton()), _react2.default.createElement(InlineBody, null, _react2.default.createElement('div', { className: 'drop-down-body' }, this.props.showSearch ? _react2.default.createElement('input', { type: 'text', autoFocus: true, defaultValue: this.state.query, ref: 'searchBox', onChange: this.onKeyPressHandler, className: 'drop-down-input', placeholder: placeholder }) : null, _react2.default.createElement('div', { onClick: this.clickHandler.bind(this) }, _react2.default.createElement(_List2.default, { ListItem: ListItem,
                 className: this.multiSelect ? 'multi-select list' : 'single-select list',
                 items: filteredOptions,
                 selection: this.state.selection,
@@ -87468,7 +87521,7 @@ var RXDropdown = function (_RXSelectionElement) {
                 return item.name.toLowerCase().indexOf(_this3.state.query.toLowerCase()) > -1;
             });
 
-            return _react2.default.createElement(InlinePopup, { ref: 'inlinePopup' }, _react2.default.createElement(InlineButton, null, this.renderButton()), _react2.default.createElement(InlineBody, null, _react2.default.createElement('div', { className: 'drop-down-body' }, _react2.default.createElement('input', { type: 'text', autoFocus: true, defaultValue: this.state.query, ref: 'searchBox',
+            return _react2.default.createElement(InlinePopup, { ref: 'inlinePopup', disabled: this.props.disabled }, _react2.default.createElement(InlineButton, null, this.renderButton()), _react2.default.createElement(InlineBody, null, _react2.default.createElement('div', { className: 'drop-down-body' }, _react2.default.createElement('input', { type: 'text', autoFocus: true, defaultValue: this.state.query, ref: 'searchBox',
                 onChange: this.onKeyPressHandler, className: 'drop-down-input',
                 placeholder: this.props.placeholder }), _react2.default.createElement('div', { onClick: this.onClickHandler.bind(this), ref: 'listRoot' }, _react2.default.createElement(_List2.default, { items: filteredOptions, selectionManager: this.selectionManager,
                 selection: this.state.value, ListItem: RXDropdownItem })))));
@@ -90361,6 +90414,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 
+var options = [{ id: '1', name: 'one' }, { id: '2', name: 'two' }];
+
 var Forms = function (_SmartWrapper) {
     _inherits(Forms, _SmartWrapper);
 
@@ -90395,6 +90450,11 @@ var Forms = function (_SmartWrapper) {
                 'div',
                 { className: 'forms' },
                 _react2.default.createElement(
+                    'h1',
+                    null,
+                    'RXForm PropRules'
+                ),
+                _react2.default.createElement(
                     _reactStarterComponents.RXForm,
                     { onValueChange: this.valueChange.bind(this), onPropChange: this.propChange.bind(this) },
                     _react2.default.createElement(_reactStarterComponents.RXTextInput, { name: 'uname' }),
@@ -90407,7 +90467,22 @@ var Forms = function (_SmartWrapper) {
                             prop: 'value', element: 'uname', expr: 'function', func: function func(val, rule) {
                                 return val.value === 'ravikumar';
                             }, value: 'ravi'
-                        }] })
+                        }] }),
+                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp', disabled: true }),
+                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp2' })
+                ),
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    'Form Disabled'
+                ),
+                _react2.default.createElement(
+                    _reactStarterComponents.Form,
+                    null,
+                    _react2.default.createElement(_reactStarterComponents.Dropdown, { options: options, name: 'dp', disabled: true }),
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dpicker', disabled: true }),
+                    _react2.default.createElement(_reactStarterComponents.Dropdown, { options: options, name: 'dp' }),
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dpicker' })
                 )
             );
         }
