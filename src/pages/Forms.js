@@ -58,6 +58,23 @@ export default class Forms extends SmartWrapper {
                 <DatePicker name="dpicker"/>
             </Form>
 
+            <h1>Form Dropdown Single select reselectd</h1>
+            <Form>
+                <Dropdown options={options} name="dp"/>
+
+                <Dropdown options={options} multiSelect={true} name="dpm"/>
+
+            </Form>
+
+            <h1>RXForm Dropdown Single select reselectd</h1>
+            <RXForm>
+                <RXDropdown options={options} name="dp"/>
+
+                <RXDropdown options={options} multiSelect={true} name="dpm"/>
+
+            </RXForm>
+
+
         </div>
     }
 }

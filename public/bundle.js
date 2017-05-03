@@ -23912,6 +23912,7 @@ var RXFormElement = function (_Component) {
                     }).combineLatest().defaultIfEmpty(null);
                     setError$.subscribe(function (resp) {
                         _this5.updateProps(resp[0], 'error');
+                        _this5.updateProps(resp[0] ? false : true, 'serverValid');
                     }, function (resp) {
                         _this5.updateProps(resp[0], 'error');
                     });
@@ -24098,6 +24099,7 @@ RXFormElement.propTypes = {
     active: _react.PropTypes.bool.isRequired,
     disabled: _react.PropTypes.bool.isRequired,
     valid: _react.PropTypes.bool.isRequired,
+    serverValid: _react.PropTypes.bool.isRequired,
     error: _react.PropTypes.object,
     debounceTime: _react.PropTypes.number.isRequired,
     validations: _react.PropTypes.array,
@@ -24114,6 +24116,7 @@ RXFormElement.defaultProps = {
     active: true,
     disabled: false,
     valid: true,
+    serverValid: true,
     debounceTime: 0,
     error: null,
     validations: [],
@@ -29918,14 +29921,21 @@ var SelectionFormElement = function (_FormElement) {
         key: 'selectById',
         value: function selectById(value) {
             var options = this.props.options;
+            var selectionManager = this.selectionManager;
+
             var toSelectItem = _.find(options, function (item) {
                 return item.id === value;
             });
             if (toSelectItem) {
                 if (this.multiSelect) {
-                    this.selectionManager.toggle(toSelectItem);
+                    selectionManager.toggle(toSelectItem);
                 } else {
-                    this.selectionManager.select(toSelectItem);
+                    var isAlreadySelected = selectionManager.isSelected(toSelectItem);
+                    if (!isAlreadySelected) {
+                        selectionManager.select(toSelectItem);
+                    } else {
+                        selectionManager.trigger('change', toSelectItem, toSelectItem);
+                    }
                 }
             }
         }
@@ -61815,14 +61825,21 @@ var RXSelectionElement = function (_RXFormElement) {
         key: 'selectById',
         value: function selectById(value) {
             var options = this.props.options;
+            var selectionManager = this.selectionManager;
+
             var toSelectItem = _.find(options, function (item) {
                 return item.id === value;
             });
             if (toSelectItem) {
                 if (this.multiSelect) {
-                    this.selectionManager.toggle(toSelectItem);
+                    selectionManager.toggle(toSelectItem);
                 } else {
-                    this.selectionManager.select(toSelectItem);
+                    var isAlreadySelected = selectionManager.isSelected(toSelectItem);
+                    if (!isAlreadySelected) {
+                        selectionManager.select(toSelectItem);
+                    } else {
+                        selectionManager.trigger('change', toSelectItem, toSelectItem);
+                    }
                 }
             }
         }
@@ -87781,7 +87798,7 @@ var RXForm = function (_Component) {
                 var propObject = this.elementPropIndex[elementName];
                 if (propObject.active) {
                     this.communication$.next({ field: elementName, type: 'validate', value: this.valueIndex[elementName] });
-                    if (propObject.valid) {
+                    if (propObject.valid && propObject.serverValid) {
                         valueObj[elementName] = this.valueIndex[elementName];
                         if (propObject.exposeName) {
                             valueObj[elementName + '_name'] = this.valueIndex[elementName + '_name'];
@@ -90483,6 +90500,28 @@ var Forms = function (_SmartWrapper) {
                     _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dpicker', disabled: true }),
                     _react2.default.createElement(_reactStarterComponents.Dropdown, { options: options, name: 'dp' }),
                     _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dpicker' })
+                ),
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    'Form Dropdown Single select reselectd'
+                ),
+                _react2.default.createElement(
+                    _reactStarterComponents.Form,
+                    null,
+                    _react2.default.createElement(_reactStarterComponents.Dropdown, { options: options, name: 'dp' }),
+                    _react2.default.createElement(_reactStarterComponents.Dropdown, { options: options, multiSelect: true, name: 'dpm' })
+                ),
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    'RXForm Dropdown Single select reselectd'
+                ),
+                _react2.default.createElement(
+                    _reactStarterComponents.RXForm,
+                    null,
+                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp' }),
+                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, multiSelect: true, name: 'dpm' })
                 )
             );
         }
