@@ -2,16 +2,29 @@
  * Created by ravi.hamsa on 10/8/16.
  */
 import React, {Component, PropTypes} from "react";
-import {SmartWrapper, RXForm, RXTextInput, RXDropdown, Form, TextInput, Dropdown, DatePicker} from 'react-starter-components';
+import {
+    SmartWrapper,
+    RXForm,
+    RXTextInput,
+    RXDropdown,
+    Form,
+    TextInput,
+    Dropdown,
+    DatePicker
+} from 'react-starter-components';
 
 
-let options = [{id:'1', name:'one'}, {id:'2', name:'two'}]
+let options = [{id: '1', name: 'one'}, {id: '2', name: 'two'}]
 
 
 export default class Forms extends SmartWrapper {
 
     valueChange(changed, fullObject) {
         // console.log(changed, fullObject, 'valueChange')
+    }
+
+    onSubmitHandler1() {
+        debugger;
     }
 
     propChange(prop) {
@@ -30,9 +43,10 @@ export default class Forms extends SmartWrapper {
     render() {
         return <div className="forms">
             <h1>RXForm PropRules</h1>
-            <RXForm onValueChange={this.valueChange.bind(this)} onPropChange={this.propChange.bind(this)}>
+            <RXForm onValueChange={this.valueChange.bind(this)} onPropChange={this.propChange.bind(this)}
+                    onSubmitHandler={this.onSubmitHandler1.bind(this)}>
                 <RXTextInput name="uname"/>
-                <RXTextInput name="password"  propRules={[{
+                <RXTextInput name="password" propRules={[{
                     prop: 'disabled',
                     element: 'uname',
                     expr: 'eq',
@@ -44,7 +58,9 @@ export default class Forms extends SmartWrapper {
                 }]}/>
 
                 <RXDropdown options={options} name="dp" disabled={true}/>
-                <RXDropdown options={options} name="dp2" />
+                <RXDropdown options={options} name="dp2"/>
+
+                <button>Submit</button>
 
 
             </RXForm>
@@ -69,10 +85,17 @@ export default class Forms extends SmartWrapper {
             <h1>RXForm Dropdown Single select reselectd</h1>
             <RXForm>
                 <RXDropdown options={options} name="dp"/>
-
                 <RXDropdown options={options} multiSelect={true} name="dpm"/>
-
             </RXForm>
+
+
+            <h1>Date Picker past Date</h1>
+            <Form>
+                <DatePicker name="dp" label="No Min Max" />
+                <DatePicker name="dp" minDate="10/05/2017" label="Only Min"/>
+                <DatePicker name="dp" maxDate="20/05/2017" label="Only Max"/>
+                <DatePicker name="dp" minDate="10/05/2017" maxDate="20/05/2017" label="Both Min and Max"/>
+            </Form>
 
 
         </div>

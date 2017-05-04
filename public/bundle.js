@@ -23758,7 +23758,8 @@ var RXFormElement = function (_Component) {
         var _this = _possibleConstructorReturn(this, (RXFormElement.__proto__ || Object.getPrototypeOf(RXFormElement)).call(this, props));
 
         var _this$props = _this.props,
-            debounceTime = _this$props.debounceTime,
+            _this$props$debounceT = _this$props.debounceTime,
+            debounceTime = _this$props$debounceT === undefined ? 0 : _this$props$debounceT,
             validations = _this$props.validations,
             activeRules = _this$props.activeRules,
             propRules = _this$props.propRules;
@@ -23785,7 +23786,7 @@ var RXFormElement = function (_Component) {
     _createClass(RXFormElement, [{
         key: 'getPropToStateList',
         value: function getPropToStateList() {
-            return ['active', 'error', 'disabled', 'valid', 'value', 'type'];
+            return ['active', 'error', 'disabled', 'valid', 'value', 'type', 'serverValid', 'serverError'];
         }
     }, {
         key: 'applyValue',
@@ -23901,9 +23902,12 @@ var RXFormElement = function (_Component) {
 
             if (this.props.serverValidation) {
                 (function () {
+                    var forceServerValidation$ = _this5.context.communication$.filter(function (val) {
+                        return val.type === 'elementServerValidation' && val.field === _this5.props.name;
+                    });
                     var validateRequest$ = _this5.value$.filter(function (val) {
                         return val.type === 'update';
-                    }).debounceTime(400).filter(function () {
+                    }).merge(forceServerValidation$).debounceTime(400).filter(function () {
                         return _this5.state.valid;
                     });
                     var serverValidation = getServerValidationRule(_this5.props.serverValidation);
@@ -23911,10 +23915,11 @@ var RXFormElement = function (_Component) {
                         return _rxjs2.default.Observable.fromPromise(_dataLoader2.default.getRequestDef(serverValidation.requestId, serverValidation.getParams(val, _this5.context.elementValueIndex)));
                     }).combineLatest().defaultIfEmpty(null);
                     setError$.subscribe(function (resp) {
-                        _this5.updateProps(resp[0], 'error');
+                        _this5.updateProps(resp[0], 'serverError');
                         _this5.updateProps(resp[0] ? false : true, 'serverValid');
                     }, function (resp) {
-                        _this5.updateProps(resp[0], 'error');
+                        _this5.updateProps(resp[0], 'serverError');
+                        _this5.updateProps(resp[0] ? false : true, 'serverValid');
                     });
                 })();
             }
@@ -24022,7 +24027,7 @@ var RXFormElement = function (_Component) {
     }, {
         key: 'getRestProps',
         value: function getRestProps() {
-            var props = _lodash2.default.omit(this.state, 'showLabel', 'debounceTime', 'options', 'helperText', 'active', 'error', 'validations', 'activeRules', 'valid', 'serverValidation', '__shadowValue', 'register', 'exposeName', 'exposeSelection');
+            var props = _lodash2.default.omit(this.state, 'showLabel', 'debounceTime', 'options', 'helperText', 'active', 'error', 'validations', 'activeRules', 'valid', 'serverValidation', '__shadowValue', 'register', 'exposeName', 'exposeSelection', 'serverValid', 'serverError');
             props.ref = 'inputElement';
             props.className = (props.className || '') + ' ' + 'form-control';
             return props;
@@ -24063,7 +24068,7 @@ var RXFormElement = function (_Component) {
         value: function renderElementWithWrapper() {
             var formClasses = this.getFormClasses();
             var elementProps = this.context.elementPropIndex[this.props.name];
-            var error = this.state.error;
+            var error = this.state.error || this.state.serverError;
             return _react2.default.createElement('fieldset', { className: formClasses.join(' ') }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, this.renderElement(), this.props.helperText ? _react2.default.createElement('small', { className: 'text-muted' }, this.props.helperText) : '', error ? _react2.default.createElement('small', { className: 'text-danger' }, error.message) : '');
         }
     }, {
@@ -24119,6 +24124,7 @@ RXFormElement.defaultProps = {
     serverValid: true,
     debounceTime: 0,
     error: null,
+    serverError: null,
     validations: [],
     activeRules: [],
     propRules: [],
@@ -61792,7 +61798,7 @@ var RXSelectionElement = function (_RXFormElement) {
     _createClass(RXSelectionElement, [{
         key: 'getPropToStateList',
         value: function getPropToStateList() {
-            return ['active', 'error', 'disabled', 'valid', '__shadowValue', 'value', 'type', 'exposeName', 'exposeSelection'];
+            return ['active', 'error', 'disabled', 'valid', '__shadowValue', 'value', 'type', 'exposeName', 'exposeSelection', 'serverValid', 'serverError'];
         }
     }, {
         key: 'applyValue',
@@ -61941,7 +61947,7 @@ var RXSelectionElement = function (_RXFormElement) {
             var formClasses = this.getFormClasses();
             formClasses.push(this.props.multiSelect === true ? 'multi-select' : 'single-select');
             var elementProps = this.context.elementPropIndex[this.props.name];
-            var error = this.state.error;
+            var error = this.state.error || this.state.serverError;
             return _react2.default.createElement('fieldset', { className: formClasses.join(' ') }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, this.renderElement(), this.props.helperText ? _react2.default.createElement('small', { className: 'text-muted' }, this.props.helperText) : '', error ? _react2.default.createElement('small', { className: 'text-danger' }, error.message) : '');
         }
     }]);
@@ -85752,6 +85758,11 @@ var DatePicker = function (_FormElement) {
             }
         }
     }, {
+        key: 'getDefaultValue',
+        value: function getDefaultValue() {
+            return this._changing ? this.state.defaultValue : this.context.valueStore.get(this.props.name) || (0, _moment2.default)().format(inputFormat);
+        }
+    }, {
         key: 'render',
         value: function render() {
 
@@ -85762,7 +85773,7 @@ var DatePicker = function (_FormElement) {
 
             return _react2.default.createElement('fieldset', { className: formClasses }, this.props.showLabel ? _react2.default.createElement('label', { className: 'element-label' }, this.props.label) : null, _react2.default.createElement(InlinePopup, { disabled: this.props.disabled }, _react2.default.createElement(InlineButton, null, _react2.default.createElement('div', null, _react2.default.createElement('input', { type: this.props.type, className: 'form-control', name: this.props.name,
                 placeholder: this.props.placeholder, onChange: this.onChange.bind(this), value: displayValue,
-                readOnly: 'true', ref: 'inputField' }), _react2.default.createElement('span', { className: 'calendar icon' }))), _react2.default.createElement(InlineBody, null, _react2.default.createElement(_Month2.default, { onDateSelect: this.onDateSelect.bind(this), selectedDate: defaultValue, displayDate: defaultValue }))), this.props.helperText ? _react2.default.createElement('small', { className: 'text-muted' }, this.props.helperText) : '', errors.length > 0 ? _react2.default.createElement('small', { className: 'text-danger' }, errors[0].message) : '');
+                readOnly: 'true', ref: 'inputField' }), _react2.default.createElement('span', { className: 'calendar icon' }))), _react2.default.createElement(InlineBody, null, _react2.default.createElement(_Month2.default, { onDateSelect: this.onDateSelect.bind(this), selectedDate: defaultValue, displayDate: defaultValue, minDate: this.props.minDate, maxDate: this.props.maxDate }))), this.props.helperText ? _react2.default.createElement('small', { className: 'text-muted' }, this.props.helperText) : '', errors.length > 0 ? _react2.default.createElement('small', { className: 'text-danger' }, errors[0].message) : '');
         }
     }]);
 
@@ -85773,7 +85784,9 @@ exports.default = DatePicker;
 
 DatePicker.defaultProps = _extends({}, _FormElement3.default.defaultProps, {
     type: 'date-picker',
-    displayFormat: 'DD/MM/YYYY'
+    displayFormat: inputFormat,
+    minDate: (0, _moment2.default)().format(inputFormat),
+    maxDate: (0, _moment2.default)().add(10, 'years').format(inputFormat)
 });
 
 /***/ }),
@@ -85915,7 +85928,7 @@ var Month = function (_Component3) {
         _this3.state = {
             displayDate: props.displayDate || today.format(DATE_FORMAT),
             selectedDate: props.selectedDate || null,
-            minDate: props.minDate,
+            minDate: props.minDate || today.format(DATE_FORMAT),
             maxDate: props.maxDate
         };
         return _this3;
@@ -85954,6 +85967,8 @@ var Month = function (_Component3) {
         value: function render() {
             var displayDate = (0, _moment2.default)(this.state.displayDate, DATE_FORMAT);
             var selectedDate = (0, _moment2.default)(this.state.selectedDate, DATE_FORMAT);
+            var minDate = (0, _moment2.default)(this.state.minDate, DATE_FORMAT);
+            var maxDate = (0, _moment2.default)(this.state.maxDate, DATE_FORMAT);
             var today = (0, _moment2.default)();
 
             var startDate = displayDate.clone().startOf('month').startOf('week');
@@ -85967,7 +85982,7 @@ var Month = function (_Component3) {
                     dateObject: startDate.clone(),
                     today: startDate.isSame(today, 'day'),
                     selected: selectedDate && selectedDate.isSame(startDate),
-                    selectable: startDate.isSame(displayDate, 'month'),
+                    selectable: startDate.isSame(displayDate, 'month') && startDate.diff(minDate, 'day') >= 0 && maxDate.diff(startDate, 'day') >= 0,
                     day: startDate.day(),
                     date: startDate.date()
                 });
@@ -87807,7 +87822,7 @@ var RXForm = function (_Component) {
                             valueObj[elementName + '_selection'] = this.valueIndex[elementName + '_selection'];
                         }
                     } else {
-                        var error = propObject.error;
+                        var error = propObject.error || propObject.serverError;
                         errors.push([{ field: elementName, type: error.type, message: error.message }]);
                     }
                 }
@@ -87833,6 +87848,11 @@ var RXForm = function (_Component) {
         key: 'setElementProp',
         value: function setElementProp(elementName, prop, value) {
             this.communication$.next({ field: elementName, type: 'elementProp', prop: prop, value: value });
+        }
+    }, {
+        key: 'forceElementServerValidation',
+        value: function forceElementServerValidation(elementName) {
+            this.communication$.next({ field: elementName, type: 'elementServerValidation', value: this.valueIndex[elementName] });
         }
     }, {
         key: 'setElementProps',
@@ -90448,6 +90468,11 @@ var Forms = function (_SmartWrapper) {
             // console.log(changed, fullObject, 'valueChange')
         }
     }, {
+        key: 'onSubmitHandler1',
+        value: function onSubmitHandler1() {
+            debugger;
+        }
+    }, {
         key: 'propChange',
         value: function propChange(prop) {
             console.log(prop, 'propChange12');
@@ -90473,7 +90498,8 @@ var Forms = function (_SmartWrapper) {
                 ),
                 _react2.default.createElement(
                     _reactStarterComponents.RXForm,
-                    { onValueChange: this.valueChange.bind(this), onPropChange: this.propChange.bind(this) },
+                    { onValueChange: this.valueChange.bind(this), onPropChange: this.propChange.bind(this),
+                        onSubmitHandler: this.onSubmitHandler1.bind(this) },
                     _react2.default.createElement(_reactStarterComponents.RXTextInput, { name: 'uname' }),
                     _react2.default.createElement(_reactStarterComponents.RXTextInput, { name: 'password', propRules: [{
                             prop: 'disabled',
@@ -90486,7 +90512,12 @@ var Forms = function (_SmartWrapper) {
                             }, value: 'ravi'
                         }] }),
                     _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp', disabled: true }),
-                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp2' })
+                    _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp2' }),
+                    _react2.default.createElement(
+                        'button',
+                        null,
+                        'Submit'
+                    )
                 ),
                 _react2.default.createElement(
                     'h1',
@@ -90522,6 +90553,19 @@ var Forms = function (_SmartWrapper) {
                     null,
                     _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, name: 'dp' }),
                     _react2.default.createElement(_reactStarterComponents.RXDropdown, { options: options, multiSelect: true, name: 'dpm' })
+                ),
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    'Date Picker past Date'
+                ),
+                _react2.default.createElement(
+                    _reactStarterComponents.Form,
+                    null,
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dp', label: 'No Min Max' }),
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dp', minDate: '10/05/2017', label: 'Only Min' }),
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dp', maxDate: '20/05/2017', label: 'Only Max' }),
+                    _react2.default.createElement(_reactStarterComponents.DatePicker, { name: 'dp', minDate: '10/05/2017', maxDate: '20/05/2017', label: 'Both Min and Max' })
                 )
             );
         }
