@@ -2,7 +2,7 @@
  * Created by ravi.hamsa on 7/23/16.
  */
 import React, {Component, PropTypes} from "react";
-import {Home, Unknown, UserLogin, Forms,UploadForm, PopupPage} from "./pages";
+import {Home, Unknown, UserLogin, Forms,UploadForm, PopupPage, PageTable} from "./pages";
 import PageWrapper from './components/core/PageWrapper';
 import navController from './controllers/navController';
 import render from "./render";
@@ -29,6 +29,7 @@ const parseParams = function (location) {
 const pageIdMaps = {
     'home': Home,
     'popup': PopupPage,
+    'table': PageTable,
     'unknown': Unknown,
     'login': UserLogin,
     'upload': UploadForm,
