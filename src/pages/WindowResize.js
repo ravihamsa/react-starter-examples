@@ -33,7 +33,7 @@ export default class WindowResize extends Component {
 
     componentWillUnmount(){
         if(this.unsubscribeWindowResize){
-            this.unsubscribeWindowResize();
+            this.unsubscribeWindowResize.unsubscribe();
         }
     }
 
