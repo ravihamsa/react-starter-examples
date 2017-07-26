@@ -721,10 +721,20 @@ class Pagination extends Component {
 
 
 export default class PageTable extends SmartWrapper {
+
+    constructor(props){
+        super(props);
+        this.state.perPage = 10;
+    }
+
+    increasePerPage(diff){
+        this.setState({perPage:this.state.perPage + diff});
+    }
+
     render() {
         return <div className="table">
 
-            <PaginatedTable records={records} perPage={10}>
+            <PaginatedTable records={records} perPage={this.state.perPage}>
                 <Table>
                     <THEAD>
                     <TR>
@@ -743,6 +753,10 @@ export default class PageTable extends SmartWrapper {
                 </Table>
                 <Pagination />
             </PaginatedTable>
+
+
+            <button onClick={this.increasePerPage.bind(this, 1)}>Increase Per Page</button>
+            <button onClick={this.increasePerPage.bind(this, -1)}>Decrease Per Page</button>
 
         </div>
     }
