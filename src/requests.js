@@ -5,6 +5,12 @@
 import _ from 'lodash';
 let urlPrefix = 'backend/api/v1/'
 
+const tableDataParser = (data, meta) => {
+    return {
+        records:data,
+        totalRecords:meta.total_count
+    }
+}
 
 export default {
     getListOfSomeItems: {
@@ -44,6 +50,13 @@ export default {
             debugger;
             return data;
         }
+    },
+    getInventoryUsers: {
+        type: 'url',
+        cache: 'none',
+        method: 'get',
+        url: '' + '/users/apps/:app_id/?start=:start&offset=:offset&sortKey=:sortKey&sortOrder=:sortOrder&filterKey=:filterKey&filterQuery=:filterQuery',
+        parser: tableDataParser
     }
 }
 

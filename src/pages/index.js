@@ -1,9 +1,12 @@
 /* ***** generated file - do not edit ***** */ 
+export ElementList from "./ElementList"
 export Forms from "./Forms"
 export Home from "./Home"
 export LoaderAnimation from "./LoaderAnimation"
 export PageTable from "./PageTable"
+export PaginatedTable from "./PaginatedTable"
 export PopupPage from "./PopupPage"
+export SimpleController from "./SimpleController"
 export Unknown from "./Unknown"
 export UploadForm from "./UploadForm"
 export UserLogin from "./user/Login"

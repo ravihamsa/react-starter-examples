@@ -8,34 +8,26 @@ import history from 'react-starter-components/lib/core/history'
 import routes from './routes';
 import requestConfigs from './requests';
 import render from './render'
+import omit from 'lodash/omit';
+
 
 
 dataLoader.setCommonHeaders({
     'Content-Type': 'application/json',
 })
 
-dataLoader.setResponseParser(function(resp){
-    let data = null;
-    let errors = null
-    let warnings = null;
-
-    if(!resp.error_code){
-        data=resp;
-    }else{
-        errors = [{id:resp.error_code, message:resp.msg, type:'error'}];
+dataLoader.setResponseParser((resp) => {
+    if (resp.success) {
+        return {
+            data: resp.result,
+            meta: omit(resp, 'result')
+        };
+    } else {
+        return {
+            errors: resp.errors
+        };
     }
-
-    if(resp.warning_code){
-        warnings = [{id:resp.warning, message:resp.warning, type:'warning'}];
-    }
-
-    return {
-        data: data,
-        errors: errors,
-        warnings: warnings
-    }
-})
-
+});
 
 for (let requestId in requestConfigs) {
     dataLoader.addResource(requestId, requestConfigs[requestId])

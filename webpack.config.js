@@ -7,7 +7,7 @@ var path = require('path');
 
 
 module.exports = {
-  devtool:'source-map',
+  devtool:'inline-source-map',
   entry:['babel-polyfill','./src/main'],
   output:{
     path:path.join(__dirname, 'public'),
