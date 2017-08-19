@@ -1,0 +1,14 @@
+.user-test {
+  background-color: red;
+}
+.date-picker .selectable {
+  background-color: red;
+}
+.date-picker .today {
+  background-color: green;
+  color: white;
+}
+.date-picker .selected {
+  background-color: blue;
+  color: white;
+}
