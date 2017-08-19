@@ -16,10 +16,10 @@ module.exports = {
   resolve:{
     extensions:['.js']
   },
-/*  externals:{
+  externals:{
     'react':'React',
     'react-dom':'ReactDOM'
-  },*/
+  },
   module:{
     loaders:[
       {
