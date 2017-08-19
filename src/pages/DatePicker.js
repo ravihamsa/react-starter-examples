@@ -13,7 +13,7 @@ export default class DatePicker extends SmartWrapper {
     render() {
         return <div className="date-picker">
             <RXForm onValueChange={this.onValueChange.bind(this)}>
-                <RXDatePicker name="someDate"/>
+                <RXDatePicker name="someDate" displayFormat="YYYY/MM/DD"/>
             </RXForm>
         </div>
     }
