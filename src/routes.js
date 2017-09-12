@@ -2,7 +2,8 @@
  * Created by ravi.hamsa on 7/23/16.
  */
 import React, {Component, PropTypes} from "react";
-import {Home, Unknown, UserLogin, Forms,UploadForm, PopupPage, PageTable, WindowResize, LoaderAnimation, ElementList, PaginatedTable, DatePicker, ExposeSelection, ActiveWrapper, MultipleValidation} from "./pages";
+import {Home, Unknown, UserLogin, Forms,UploadForm, PopupPage, PageTable, WindowResize, LoaderAnimation,
+    ElementList, PaginatedTable, DatePicker, ExposeSelection, ActiveWrapper, MultipleValidation, ValidationRule} from "./pages";
 import PageWrapper from './components/core/PageWrapper';
 import navController from './controllers/navController';
 import render from "./render";
@@ -37,6 +38,7 @@ const pageIdMaps = {
     'resize': WindowResize,
     'loading': LoaderAnimation,
     'forms': Forms,
+    'validation': ValidationRule,
     'datePicker': DatePicker,
     'exposeSelection': ExposeSelection,
     'elementList':ElementList,
