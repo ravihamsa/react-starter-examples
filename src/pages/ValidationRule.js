@@ -4,25 +4,28 @@
 import React, {Component, PropTypes} from "react";
 import {SmartWrapper, RXForm, RXTextInput, addValidationRule} from 'react-starter-components';
 
-addValidationRule('noFloat', function(rule, value){
+addValidationRule('noFloat', function (rule, value) {
     const intValue = parseInt(value);
     const floatValue = parseFloat(value);
     return intValue === floatValue;
 })
 
 
-addValidationRule('floatOnly', function(rule, value){
+addValidationRule('floatOnly', function (rule, value) {
     const intValue = parseInt(value);
     const floatValue = parseFloat(value);
-    return floatValue > intValue ;
+    return floatValue > intValue;
 });
 
+
 export default class ValidationRule extends SmartWrapper {
-    render(){
+
+    render() {
         return <div className="validation-rule">
             <RXForm >
-                <RXTextInput validations={[{expr:'number'},{expr:'noFloat'}]}  name="noFloat" label="No Float" />
-                <RXTextInput validations={[{expr:'number'},{expr:'floatOnly'}]}  name="floatOnly" label="Float Only" />
+                <RXTextInput validations={[{expr: 'number'}, {expr: 'noFloat'}]} name="noFloat" label="No Float" autoFocus
+                             />
+                <RXTextInput  validations={[{expr: 'number'}, {expr: 'floatOnly'}]} name="floatOnly" label="Float Only"/>
             </RXForm>
         </div>
     }
