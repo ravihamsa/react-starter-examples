@@ -22,6 +22,15 @@ export default {
             return data;
         }
     },
+    serverValidation: {
+        type: 'url',
+        method: 'get',
+        cache:'none',
+        url: urlPrefix + 'dummyData',
+        parser: function(data){
+            return ;
+        }
+    },
     uploadRequest: {
         type: 'url',
         method: 'upload',

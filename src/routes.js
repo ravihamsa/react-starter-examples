@@ -3,7 +3,7 @@
  */
 import React, {Component, PropTypes} from "react";
 import {Home, Unknown, UserLogin, Forms,UploadForm, PopupPage, PageTable, WindowResize, LoaderAnimation,
-    ElementList, PaginatedTable, DatePicker, ExposeSelection, ActiveWrapper, MultipleValidation, ValidationRule, InputSet} from "./pages";
+    ElementList, PaginatedTable, DatePicker, ExposeSelection, ActiveWrapper, MultipleValidation, ValidationRule, InputSet, ServerValidation} from "./pages";
 import PageWrapper from './components/core/PageWrapper';
 import navController from './controllers/navController';
 import render from "./render";
@@ -38,6 +38,7 @@ const pageIdMaps = {
     'resize': WindowResize,
     'loading': LoaderAnimation,
     'forms': Forms,
+    'serverValidation': ServerValidation,
     'validation': ValidationRule,
     'datePicker': DatePicker,
     'exposeSelection': ExposeSelection,
