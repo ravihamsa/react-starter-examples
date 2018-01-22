@@ -14,6 +14,7 @@ export default class ExposeSelection extends SmartWrapper {
         return <div className="expose-selection">
             <RXForm onValueChange={this.onValueChange.bind(this)}>
                 <RXDropdown name="dropdown" multiSelect={true} exposeSelection={true} options={options}/>
+                <RXDropdown name="dropdown1" multiSelect={false} exposeSelection={true} options={options}/>
             </RXForm>
         </div>
     }
