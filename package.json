@@ -29,7 +29,7 @@
     "prop-types": "^15.6.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-starter-components": "^1.0.92",
+    "react-starter-components": "^1.0.103",
     "rxjs": "^5.0.0-beta.12",
     "selection-manager": "^1.0.25",
     "universal-router": "^1.2.2",
